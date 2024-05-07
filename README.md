@@ -1,13 +1,14 @@
 # How to use
 
-## Ghoster
+## Locator
 !['ghost screen capture'](assets/Ghoster.PNG)
-* select the meshes you wish to create ghosts
-* click add source mesh to added to the ghosting source list
-* you can click the add/update button to add or update a ghost
-* prev and next will navigate the the previous and next ghost to the current frame
-* del deletes the ghost at the current frame
-* del all will delete all ghost
-* the color picker defines the color of the ghost
-* the first slider changes the overall opacity
-* the second slider controllers the falloff of the opacity
+* For best results, manually set OBJ's to 0,0,0 to ensure that nothing get's broken.
+* Click on the Mesh you wish to create a locator on, note that you may only select 1 mesh at a time.
+* Press the 'Set Mesh for Locator' button
+* Select the Parent you wish for the locator to be parented to
+* Press the 'Set as Parent' Button
+* Press the 'Generate Locator'. Note that it also creates a _GRP to the Locator
+* (Optional) Check the 'Match Transformations' Box, note that you do not need to do this if your parent is not at the location you want it at, make sure that the locator_GRP is located at the place you want it to be contrained at
+* Press the 'Constrain to Parent' Button.
+
+* Enjoy! 
