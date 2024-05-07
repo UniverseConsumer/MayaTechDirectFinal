@@ -7,16 +7,16 @@ class Locator:
     def __init__(self):
         self.srcMeshes = set()                              #Selected Mesh where the Locator will go to
         self.parentMeshes = set()                           #Selected Mesh(es) where the locator _GRP will be located to               #Roration Values for Locator _GRP
+        self.LocatorName = "Locator_" + self.srcMeshes
+        self.LocatorGrpName = self.LocatorName + "_GRP"
 
     def SelectedSrcMesh(self):
         selection = mc.ls(sl=True)
         if not selection:
             return False, "No Mesh Selected"
         self.srcMeshes.clear()
-        LocatorName = "Locator_" + self.srcMeshes
-        LocatorGrpName = LocatorName + "_GRP"
-        mc.group (self.srcMeshes, LocatorName)
-        mc.group (LocatorName, LocatorGrpName)
+        mc.group (self.srcMeshes, self.LocatorName)
+        mc.group (self.LocatorName, self.LocatorGrpName)
 
         if selection > 1:
             return False, "Only select 1 Mesh for Locator to be placed!"
@@ -43,6 +43,18 @@ class Locator:
         ConstraintToParent = mc.ls(s = True, type = 'transform') [1:]
         for Constraint in ConstraintToParent:
             mc.parentConstraint(Constraint, LocatorGrpName)
+
+
+    def SetSelectedAsSrcMesh(self):
+        selection = mc.ls(sl=True)
+        self.srcMeshes.clear() # removes all elements in the set.
+        for selected in selection:
+            shapes = mc.listRelatives(selected, s=True) # find all shapes of the selected object
+            for s in shapes:
+                if mc.objectType(s) == "mesh": # the object is a mesh
+                    self.srcMeshes.add(selected) # add the mesh to our set.
+
+        mc.setAttr(self.LocatorGrpName + ",".join(self.srcMeshes), type = "string")
             
 class LocatorWidget(QWidget):
     def __init__(self):
@@ -72,7 +84,7 @@ class LocatorWidget(QWidget):
             mc.select(item.text(), add = True)
 
     def AddSrcMeshBtnClicked(self):
-        self.locatorClass.SelectedSrcMesh() # asks ghost to populate it's srcMeshes with the current selection
+        self.locatorClass.SetSelectedAsSrcMesh() # asks ghost to populate it's srcMeshes with the current selection
         self.srcMeshList.clear() # this clears our list widget
         self.srcMeshList.addItems(self.locatorClass.srcMeshes) # this add the srcMeshes collected eariler to the list widget
         
