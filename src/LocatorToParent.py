@@ -7,10 +7,10 @@ class Locator:
     def __init__(self):
         self.srcMeshes = set()                              #Selected Mesh where the Locator will go to
         self.parentMeshes = set()                           #Selected Mesh(es) where the locator _GRP will be located to               #Roration Values for Locator _GRP
-        self.LocatorName = "Locator_" + self.srcMeshes
-        self.LocatorGrpName = self.LocatorName + "_GRP"
+        self.LocatorGrpName = "Locator_GRP"
 
-    def SelectedSrcMesh(self):
+    def AddSrcMesh(self):
+        self.LocatorName = "Locator_" + self.srcMeshes
         selection = mc.ls(sl=True)
         if not selection:
             return False, "No Mesh Selected"
@@ -60,7 +60,7 @@ class LocatorWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.locatorClass = Locator()
-        self.setWindowTitle("Locator Creator | Tool Created by Nathan Garcia")
+        self.setWindowTitle("Locator Creator")
         self.masterLayout = QVBoxLayout()
         self.setLayout(self.masterLayout)
 
@@ -73,6 +73,24 @@ class LocatorWidget(QWidget):
         addSrcMeshBtn = QPushButton("Add Source Mesh")
         addSrcMeshBtn.clicked.connect(self.AddSrcMeshBtnClicked)
         self.masterLayout.addWidget(addSrcMeshBtn)
+
+        self.ParentMeshList = QListWidget()
+        self.ParentMeshList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.ParentMeshList.itemSelectionChanged.connect(self.SrcMeshSelectionChanged)
+        self.ParentMeshList.addItem(self.locatorClass.parentMeshes)
+        self.masterLayout.addWidget(self.ParentMeshList)
+
+        addParentBtn = QPushButton("Add Parent")
+        addParentBtn.clicked.connect(self.AddSrcMeshBtnClicked)
+        self.masterLayout.addWidget(addParentBtn)
+
+        MatchTransformationsCB = QCheckBox()
+        MatchTransformationsCB.clicked.connect(self.locatorClass.MatchTransformations)
+        self.masterLayout.addWidget(MatchTransformationsCB)
+
+        MakeConstraintBtn = QPushButton("Make Parent Constraint")
+        MakeConstraintBtn.clicked.connect(self.locatorClass.ParentConstraint)
+        self.masterLayout.addWidget(MakeConstraintBtn)
 
 
 
