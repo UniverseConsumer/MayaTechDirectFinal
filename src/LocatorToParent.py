@@ -1,7 +1,5 @@
-from PySide2.QtCore import Signal
-from PySide2.QtGui import QIntValidator, QRegExpValidator 
 import maya.cmds as mc
-from PySide2.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget, QMessageBox, QPushButton, QVBoxLayout, QWidget, QAbstractItemView
+from PySide2.QtWidgets import QCheckBox, QListWidget, QPushButton, QVBoxLayout, QWidget, QAbstractItemView
 
 class Locator:
     def __init__(self):
