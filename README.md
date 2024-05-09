@@ -1,7 +1,7 @@
 # How to use
 
 ## Locator
-!['ghost screen capture'](assets/Ghoster.PNG)
+!['Locator screen capture'](assets/Locator.PNG)
 * For best results, manually set OBJ's to 0,0,0 to ensure that nothing get's broken.
 * Click on the Mesh you wish to create a locator on, note that you may only select 1 mesh at a time.
 * Press the 'Add Source Mesh' button
