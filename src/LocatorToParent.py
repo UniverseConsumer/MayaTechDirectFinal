@@ -6,43 +6,43 @@ from PySide2.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLine
 class Locator:
     def __init__(self):
         self.srcMeshes = set()                              #Selected Mesh where the Locator will go to
-        self.parentMeshes = set()                           #Selected Mesh(es) where the locator _GRP will be located to               #Roration Values for Locator _GRP
-        self.LocatorGrpName = "Locator_GRP"
+        self.parentMeshes = set()                           #Selected Mesh(es) where the locator _GRP will be located to
+        self.LocatorGrpName = "Locator_GRP"                 #Defines the LocatorGRPName
 
     def AddSrcMesh(self):
-        self.LocatorName = "Locator_" + self.srcMeshes
-        selection = mc.ls(sl=True)
+        self.LocatorName = "Locator_" + self.srcMeshes      #Defines the Locator Name
+        selection = mc.ls(sl=True)                          #Makes sures thetere is a selection
         if not selection:
-            return False, "No Mesh Selected"
-        self.srcMeshes.clear()
-        mc.group (self.srcMeshes, self.LocatorName)
-        mc.group (self.LocatorName, self.LocatorGrpName)
+            return False, "No Mesh Selected"                #If there is no selection
+        self.srcMeshes.clear()                              #Clear the selection
+        mc.group (self.srcMeshes, self.LocatorName)         #Group the Selected Mesh to the Locator
+        mc.group (self.LocatorName, self.LocatorGrpName)    #Group the Locator to the Locator_GRP
 
-        if selection > 1:
+        if selection > 1:                                   #Only 1 Selection for the Source Mesh can be made
             return False, "Only select 1 Mesh for Locator to be placed!"
-        for selected in selection:
-            self.srcMeshes.add(selected)
+        for selected in selection: 
+            self.srcMeshes.add(selected)                    #Add the Selected Mesh to the List
 
-    def SelectParent(self):
-        Parentselection = mc.ls(sl =True)
+    def SelectParent(self):                                 
+        Parentselection = mc.ls(sl =True)                   #Makes sure that an OBJ can be selected
         if not Parentselection:
             return False, "No Parent(s) selected, please select 1 or more Parent!"
-        self.parentMeshes.clear()
+        self.parentMeshes.clear()                           #Clear the Selection List
         for seleceted in Parentselection:
-            self.parentMeshes.add(seleceted)
+            self.parentMeshes.add(seleceted)                #Add the parent to the Selection List
 
     def ParentConstraint(self, LocatorGrpName):
-        ConstraintToParent = mc.ls(s = True, type = 'transform') [1:]
+        ConstraintToParent = mc.ls(s = True, type = 'transform') [1:]   #Selects the Locator_GRP and The Parent in the List
         for Constraint in ConstraintToParent:
-            mc.parentConstraint(Constraint, LocatorGrpName)
+            mc.parentConstraint(Constraint, LocatorGrpName)             #Make the Constraint from the Locator to the Parent
 
-    def MatchTransformations(self, LocatorGrpName, Parentselection):
+    def MatchTransformations(self, LocatorGrpName, Parentselection):    
         if LocatorGrpName and Parentselection:
-            mc.delete(mc.parentConstraint(LocatorGrpName, Parentselection))
-            mc.makeIdentity(LocatorGrpName, a = True, t = True)
+            mc.delete(mc.parentConstraint(LocatorGrpName, Parentselection)) #Deletes any Parent Contraint
+            mc.makeIdentity(LocatorGrpName, a = True, t = True)             #Matches the Transformations to the Parent
         ConstraintToParent = mc.ls(s = True, type = 'transform') [1:]
-        for Constraint in ConstraintToParent:
-            mc.parentConstraint(Constraint, LocatorGrpName)
+        for Constraint in ConstraintToParent:                               
+            mc.parentConstraint(Constraint, LocatorGrpName)                 #Re-add the Parent Constraint so the User does not have to do it again
 
 
     def SetSelectedAsSrcMesh(self):
@@ -84,7 +84,7 @@ class LocatorWidget(QWidget):
         addParentBtn.clicked.connect(self.AddSrcMeshBtnClicked)
         self.masterLayout.addWidget(addParentBtn)
 
-        MatchTransformationsCB = QCheckBox()
+        MatchTransformationsCB = QCheckBox()                                                                #Let's user decide whether or not they wish to have the transformations match when they apply the code.
         MatchTransformationsCB.clicked.connect(self.locatorClass.MatchTransformations)
         self.masterLayout.addWidget(MatchTransformationsCB)
 
